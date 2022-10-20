@@ -19,27 +19,31 @@ export function Questions() {
         }
     };
 
-    const submitAnswers = useCallback(
-        async () => {
-            console.log("userAnswers before submission", userAnswers);
-            const request = {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(userAnswers)
-            };
-            console.log("request", request);
-            const response = await fetch(`${apiBaseUrl}questions`, request);
-            console.log("response", response);
-        },
-        [userAnswers]);
 
     const questionChange = useCallback(
         (answer: Answer) => {
             setUserAnswers([...userAnswers, answer]);
-            if (questionNumber > 2) {
-                submitAnswers();
-            }
-        }, [userAnswers, questionNumber, submitAnswers]);
+        }, [userAnswers]);
+
+    useEffect(() => {
+        let m = true;
+        if (questionNumber === 4) {
+            (async () => {
+                console.log("userAnswers before submission", userAnswers);
+                const request = {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userAnswers)
+                };
+                console.log("request", request);
+                const response = await fetch(`${apiBaseUrl}questions`, request);
+                console.log("response", response);
+            })();
+        }
+        return () => {
+            m = false;
+        }
+    }, [userAnswers, questionNumber]);
 
     useEffect(() => {
         let m = true;
