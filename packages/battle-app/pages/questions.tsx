@@ -25,11 +25,10 @@ export function Questions() {
             setUserAnswers([...userAnswers, answer]);
         }, [userAnswers]);
 
-    useEffect(() => {
-        let m = true;
-        if (questionNumber === 4) {
-            (async () => {
-                console.log("userAnswers before submission", userAnswers);
+
+    const submitAnswers = useCallback(
+        async () => {
+            console.log("userAnswers before submission", userAnswers);
                 const request = {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -38,12 +37,8 @@ export function Questions() {
                 console.log("request", request);
                 const response = await fetch(`${apiBaseUrl}questions`, request);
                 console.log("response", response);
-            })();
-        }
-        return () => {
-            m = false;
-        }
-    }, [userAnswers, questionNumber]);
+        },
+        [userAnswers]);
 
     useEffect(() => {
         let m = true;
@@ -94,7 +89,7 @@ export function Questions() {
                 </div>
             }
             {!!(questionNumber > 3) &&
-                <p>Your results have been submitted!</p>
+                <button onClick={submitAnswers}>Let&apos;s rock n&apos; roll</button>
             }
 
             <BarsIcon />
@@ -115,6 +110,7 @@ export function Questions() {
                     flex:1;
                     align-items:center;
                     margin-top:0;
+                    
                 }
                 .Option{
                     display:flex;
@@ -123,6 +119,7 @@ export function Questions() {
                     flex:1;
                     width:300px;
                     border:3px solid white;
+                    border-radius:3px;
                     margin:5px;
                 }
                 .Option p{
@@ -131,20 +128,35 @@ export function Questions() {
                     padding-left:5px;
                 }
                 #question-description{
-                    width:800px;
                     text-align:center;
+                    padding:0 5px;
                 }
                 ul{
                     list-style:none;
                     margin:0;
                     padding:0;
                     display:flex;
-                    flex:1;
+                    flex-direction:column;
                 }
-                li a{
-                    text-decoration:none;
-                    color:white;
-                    
+                li{
+                    cursor:pointer;
+                }
+                li:hover{
+                    box-shadow: 0 12px 16px 0 rgba(252,252,252,0.24), 0 17px 50px 0 rgba(252,252,252,0.19);
+                }
+                button{
+                    background-color:#FCFCFC;
+                    color:#1A1D1F;
+                    height:40px;
+                    width:140px;
+                    border-radius:5px;
+                    font-weight:bold;
+                }
+                button:hover{
+                    background-color:#4EAF90;
+                    color:#FCFCFC;
+                    box-shadow: 0 12px 16px 0 rgba(252,252,252,0.24), 0 17px 50px 0 rgba(252,252,252,0.19);
+                    cursor:pointer;
                 }
                 h1{
                     color:#4EAF90;
@@ -157,6 +169,19 @@ export function Questions() {
                     width:50vw;
                     height:50vh;
                     object-fit:contain;
+                }
+                @media (min-width:50rem){
+                    #question-description{
+                        width:800px;
+                    }
+                }
+                @media (min-width: 45rem){
+                    ul{
+                        flex-wrap:wrap;
+                        flex-direction:row;
+                        align-items:center;
+                        justify-content:center;
+                    }
                 }
             `}</style>
         </div>
